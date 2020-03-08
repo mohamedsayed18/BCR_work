@@ -1,5 +1,6 @@
 import gym
 import numpy as np
+from collections import OrderedDict
 
 
 def update(observation):
@@ -51,18 +52,17 @@ scores = {}#store the scores
 
 def new_pop(d):
     global param
-    #l = sorted([d.items])
+    l = []  # rank indicies of the dictionary
     # sort the values
-    p = [1, 2, 3, 4]
-    d = {k: v for k, v in sorted(d.items(), key=lambda item: item[1])}
-    #swap the dictionary
-    l = [d.items()]
-    for i in range(1,int(len(l)/2)):
-        p[l[i+len(l/2)]] = p[l[i]] + 3
-        #param[l[i+len(l/2)]] = param[l[i]] + np.random.randn(1, no_parmaters)
-    #print(p)
 
-population = 20
+    for k, v in sorted(d.items(), key=lambda item: item[1]):
+       l.append(k)
+
+    for i in range(1, len(l)//2):    # modifiy the parameters
+      param[l[i]] = param[l[i+len(l)//2]] + np.random.randn(1, no_parmaters) * ppvariance
+
+
+population = 4
 no_parmaters = nhidden*ninputs + noutpus*nhidden + nhidden + noutpus # number of parameters
 # initalize the parameters
 param = np.random.randn(population, no_parmaters)
@@ -91,7 +91,7 @@ for _ in range(generations):
             #print(total_reward)
         
         scores[i] = total_reward
-        
-        new_pop(scores)
+    print(max(scores.values()))
+    new_pop(scores)
 
 
